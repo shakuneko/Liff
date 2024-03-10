@@ -34,42 +34,40 @@ function App() {
     const handleSubmit = (e) => {
         e.preventDefault();
         // 在这里处理表单提交逻辑
-        console.log('任务:', task);
-        console.log('时间:', time ? time.format('HH:mm:ss') : ''); // 格式化时间
+        console.log('任務:', task);
+        console.log('時間:', time ? time.format('HH:mm:ss') : ''); // 格式化时间
         console.log('日期:', date ? date.format('YYYY-MM-DD') : ''); // 格式化日期
-        console.log('类别:', category);
+        console.log('類別:', category);
     };
 
     return (
-        <div>
+        <div className="contain">
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>任务清单:</label>
-                    <input type="text" value={task} onChange={handleTaskChange} />
+                <div className="form-group">
+                    <label>任務名稱</label>
+                    <input type="text" className="form-input" value={task} onChange={handleTaskChange} />
                 </div>
-                <div>
-                    <label>时间:</label>
-                    <TimePicker 
-                    value={time} 
-                    onChange={handleTimeChange} 
-                    format="HH:mm" // 显示小时和分钟
-                    minuteStep={60} // 设置分钟步长为60，只显示整点
-                />
+                <div className="form-group">
+                    <label>日期</label>
+                    <DatePicker value={date} className="form-input" onChange={handleDateChange} placeholder="選擇日期"/>
                 </div>
-                <div>
-                    <label>日期:</label>
-                    <DatePicker value={date} onChange={handleDateChange} />
+                <div className="form-group">
+                    <label>預計執行時間</label>
+                    <TimePicker value={time} className="form-input" onChange={handleTimeChange} format="HH:mm" placeholder="選擇時間"/>
                 </div>
-                <div>
-                    <label>类别选择:</label>
-                    <Select value={category} onChange={handleCategoryChange} style={{ width: '100%' }}>
-                        <Option value="">选择类别</Option>
-                        <Option value="personal">个人</Option>
+                <div className="form-group">
+                    <label>類別</label>
+                    <Select value={category} className="form-select"  onChange={handleCategoryChange}>
+                        <Option value="" >選擇類別</Option>
+                        <Option value="personal">日常</Option>
+                        <Option value="school">學校</Option>
                         <Option value="work">工作</Option>
                         <Option value="other">其他</Option>
                     </Select>
                 </div>
-                <button type="submit">完成</button>
+                <div className="form-group">
+                    <button type="submit" className="btn-finish">完成</button>
+                </div>
             </form>
         </div>
     );
