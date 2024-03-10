@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import { TimePicker, DatePicker, Select } from 'antd';
 import 'antd/dist/reset.css';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 
 const { Option } = Select;
 
@@ -39,7 +39,10 @@ function App() {
         console.log('日期:', date ? date.format('YYYY-MM-DD') : ''); // 格式化日期
         console.log('類別:', category);
     };
-
+    useEffect(() => {
+        document.title = "任務清單";
+    }, []);
+    
     return (
         <div className="contain">
             <form onSubmit={handleSubmit}>
