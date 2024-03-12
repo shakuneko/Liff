@@ -1,24 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
-import { TimePicker, DatePicker, Select } from 'antd';
+import { TimePicker, DatePicker, Select, Modal } from 'antd';
 import 'antd/dist/reset.css';
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const { Option } = Select;
 
-
 function App() {
     const [task, setTask] = useState('');
-    const [time, setTime] = useState(null); // 使用null代替空字符串
-    const [date, setDate] = useState(null); // 使用null代替空字符串
+    const [time, setTime] = useState(null);
+    const [date, setDate] = useState(null);
     const [category, setCategory] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const [modalSuccess, setModalSuccess] = useState(true); // 默认为发送成功
 
     const handleTaskChange = (e) => {
         setTask(e.target.value);
     };
 
     const handleTimeChange = (value) => {
-        // 设置分钟部分为 00
         const selectedTime = value ? value.clone().minute(0) : null;
         setTime(selectedTime);
     };
@@ -31,18 +31,51 @@ function App() {
         setCategory(value);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // 在这里处理表单提交逻辑
-        console.log('任務:', task);
-        console.log('時間:', time ? time.format('HH:mm:ss') : ''); // 格式化时间
-        console.log('日期:', date ? date.format('YYYY-MM-DD') : ''); // 格式化日期
-        console.log('類別:', category);
+        console.log('submit button clicked')
+        const data = {
+            task: task,
+            time: time ? time.format('HH:mm:ss') : '',
+            date: date ? date.format('YYYY-MM-DD') : '',
+            category: category
+        };
+
+        try {
+            const response = await fetch('/api/tasks/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            setModalMessage('任務清單已完成');
+            setModalSuccess(true);
+            setModalVisible(true);
+
+            // 在这里处理成功的响应，例如重置表单等
+            setTask('');
+            setTime(null);
+            setDate(null);
+            setCategory('');
+        } catch (error) {
+            console.error('Error submitting form:', error);
+
+            setModalMessage('失敗嗚嗚嗚');
+            setModalSuccess(false);
+            setModalVisible(true);
+        }
     };
+
     useEffect(() => {
         document.title = "任務清單";
     }, []);
-    
+
     return (
         <div className="contain">
             <form onSubmit={handleSubmit}>
@@ -71,7 +104,18 @@ function App() {
                 <div className="form-group">
                     <button type="submit" className="btn-finish">完成</button>
                 </div>
+                
             </form>
+            
+            {/* 成功发送数据的模态框 */}
+            <Modal
+                title={modalSuccess ? "成功" : "失敗"}
+                visible={modalVisible}
+                onOk={() => setModalVisible(false)}
+                onCancel={() => setModalVisible(false)}
+            >
+                <p>{modalMessage}</p>
+            </Modal>
         </div>
     );
 }
