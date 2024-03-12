@@ -2,6 +2,7 @@ import './App.css';
 import { TimePicker, DatePicker, Select, Modal } from 'antd';
 import 'antd/dist/reset.css';
 import React, { useState, useEffect } from 'react';
+import liff from '@line/liff'; // 引入 LIFF SDK
 
 const { Option } = Select;
 
@@ -33,28 +34,28 @@ function App() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('submit button clicked')
-        const data = {
-            task: task,
-            time: time ? time.format('HH:mm:ss') : '',
-            date: date ? date.format('YYYY-MM-DD') : '',
-            category: category
-        };
-
+        
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/tasks/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+            const data = {
+                task: task,
+                time: time ? time.format('HH:mm:ss') : '',
+                date: date ? date.format('YYYY-MM-DD') : '',
+                category: category
+            };
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            // 使用 LIFF 发送数据到 Django 后端
+            if (liff.isInClient()) {
+                await liff.sendMessages([
+                    {
+                        'type': 'text',
+                        'text': JSON.stringify(data)
+                    }
+                ]);
+            } else {
+                console.log('Not in LIFF');
             }
 
-            setModalMessage('任務清單已完成');
+            setModalMessage('已儲存任務清單');
             setModalSuccess(true);
             setModalVisible(true);
 
@@ -66,7 +67,7 @@ function App() {
         } catch (error) {
             console.error('Error submitting form:', error);
 
-            setModalMessage('失敗嗚嗚嗚');
+            setModalMessage('儲存失敗');
             setModalSuccess(false);
             setModalVisible(true);
         }
@@ -74,7 +75,19 @@ function App() {
 
     useEffect(() => {
         document.title = "任務清單";
+
+        // 初始化 LIFF
+        initializeLiff();
     }, []);
+
+    // 初始化 LIFF
+    const initializeLiff = async () => {
+        try {
+            await liff.init({ liffId: '2002705912-5lZb9dKB' });
+        } catch (error) {
+            console.error('LIFF 初始化失败:', error.message);
+        }
+    };
 
     return (
         <div className="contain">
@@ -85,11 +98,11 @@ function App() {
                 </div>
                 <div className="form-group">
                     <label>日期</label>
-                    <DatePicker value={date} className="form-input" onChange={handleDateChange} placeholder="選擇日期"/>
+                    <DatePicker value={date} className="form-input" onChange={handleDateChange} placeholder="选择日期"/>
                 </div>
                 <div className="form-group">
                     <label>預計執行時間</label>
-                    <TimePicker value={time} className="form-input" onChange={handleTimeChange} format="HH:mm" placeholder="選擇時間"minuteStep={60} />
+                    <TimePicker value={time} className="form-input" onChange={handleTimeChange} format="HH:mm" placeholder="选择时间" minuteStep={60} />
                 </div>
                 <div className="form-group">
                     <label>類別</label>
@@ -104,7 +117,6 @@ function App() {
                 <div className="form-group">
                     <button type="submit" className="btn-finish">完成</button>
                 </div>
-                
             </form>
             
             {/* 成功发送数据的模态框 */}
