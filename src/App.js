@@ -42,7 +42,7 @@ function App() {
         };
 
         try {
-            const response = await fetch('/api/tasks/', {
+            const response = await fetch('http://127.0.0.1:8000/api/tasks/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ function App() {
                 </div>
                 <div className="form-group">
                     <label>預計執行時間</label>
-                    <TimePicker value={time} className="form-input" onChange={handleTimeChange} format="HH:mm" placeholder="選擇時間"/>
+                    <TimePicker value={time} className="form-input" onChange={handleTimeChange} format="HH:mm" placeholder="選擇時間"minuteStep={60} />
                 </div>
                 <div className="form-group">
                     <label>類別</label>
