@@ -41,13 +41,13 @@ function App() {
                 date: date ? date.format('YYYY-MM-DD') : '',
                 category: category
             };
-
+            const message = `已輸入任務\n任務名稱：${data.task}\n日期：${data.date}\n預計執行時間：${data.time}\n類別：${data.category}`;
             // 使用 LIFF 发送数据到 Django 后端
             if (liff.isInClient()) {
                 await liff.sendMessages([
                     {
                         'type': 'text',
-                        'text': JSON.stringify(data)
+                        'text': message
                     }
                 ]);
             } else {
