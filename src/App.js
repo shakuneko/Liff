@@ -38,7 +38,7 @@ function App() {
             const data = {
                 task: task,
                 time: time ? time.format('HH:mm') : '',
-                date: date ? date.format('YYYY/MM/DD') : '',
+                date: date ? date.format('YYYY-MM-DD') : '',
                 category: category
             };
             const message = `###${data.task}/${data.date}/${data.time}/${data.category}`;
