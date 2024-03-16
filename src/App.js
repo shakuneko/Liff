@@ -42,17 +42,20 @@ function App() {
         };
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/tasks/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+            // 使用 LIFF API 取得 LIFF ID
+            const liffId = '2002705912-5lZb9dKB';
+            const liff = window.liff;
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            // 確保 LIFF 已初始化
+            await liff.init({ liffId });
+
+            // 使用 LIFF API 將資料傳送到 LIFF App
+            await liff.sendMessages([
+                {
+                    'type': 'text',
+                    'text': JSON.stringify(data)
+                }
+            ]);
 
             setModalMessage('任務清單已完成');
             setModalSuccess(true);
