@@ -1,5 +1,5 @@
 import './App.css';
-import { TimePicker, DatePicker, Select, Modal } from 'antd';
+import { TimePicker, DatePicker, Select } from 'antd';
 import 'antd/dist/reset.css';
 import React, { useState, useEffect } from 'react';
 import liff from '@line/liff'; // 引入 LIFF SDK
@@ -10,9 +10,9 @@ function App() {
     const [time, setTime] = useState(null);
     const [date, setDate] = useState(null);
     const [category, setCategory] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalMessage, setModalMessage] = useState('');
-    const [modalSuccess, setModalSuccess] = useState(true); // 默认为发送成功
+    // const [modalVisible, setModalVisible] = useState(false);
+    // const [modalMessage, setModalMessage] = useState('');
+    // const [modalSuccess, setModalSuccess] = useState(true); // 默认为发送成功
 
     const handleTaskChange = (e) => {
         setTask(e.target.value);
@@ -37,11 +37,11 @@ function App() {
         try {
             const data = {
                 task: task,
-                time: time ? time.format('HH:mm:ss') : '',
-                date: date ? date.format('YYYY-MM-DD') : '',
+                time: time ? time.format('HH:mm') : '',
+                date: date ? date.format('YYYY/MM/DD') : '',
                 category: category
             };
-            const message = `已輸入任務\n任務名稱：${data.task}\n日期：${data.date}\n預計執行時間：${data.time}\n類別：${data.category}`;
+            const message = `新增任務\n任務名稱：${data.task}\n日期：${data.date}\n預計執行時間：${data.time}\n類別：${data.category}`;
             // 使用 LIFF 发送数据到 Django 后端
             if (liff.isInClient()) {
                 await liff.sendMessages([
@@ -53,10 +53,11 @@ function App() {
             } else {
                 console.log('Not in LIFF');
             }
-            setModalMessage('任務清單已完成');
-            setModalSuccess(true);
-            setModalVisible(true);
-
+            // setModalMessage('任務清單已完成');
+            // setModalSuccess(true);
+            // setModalVisible(true);
+            window.alert("成功新增任務！");
+            liff.closeWindow();
             // 在这里处理成功的响应，例如重置表单等
             setTask('');
             setTime(null);
@@ -64,10 +65,10 @@ function App() {
             setCategory('');
         } catch (error) {
             console.error('Error submitting form:', error);
-
-            setModalMessage('失敗嗚嗚嗚');
-            setModalSuccess(false);
-            setModalVisible(true);
+            window.alert("Error sending message: " + error);
+            // setModalMessage('失敗嗚嗚嗚');
+            // setModalSuccess(false);
+            // setModalVisible(true);
         }
     };
 
@@ -102,10 +103,10 @@ function App() {
                     <label>類別</label>
                     <Select value={category} className="form-select"  onChange={handleCategoryChange}>
                         <Option value="" >選擇類別</Option>
-                        <Option value="personal">日常</Option>
-                        <Option value="school">學校</Option>
-                        <Option value="work">工作</Option>
-                        <Option value="other">其他</Option>
+                        <Option value="日常">日常</Option>
+                        <Option value="學校">學校</Option>
+                        <Option value="工作">工作</Option>
+                        <Option value="其他">其他</Option>
                     </Select>
                 </div>
                 <div className="form-group">
@@ -115,14 +116,14 @@ function App() {
             </form>
             
             {/* 成功发送数据的模态框 */}
-            <Modal
+            {/* <Modal
                 title={modalSuccess ? "成功" : "失敗"}
                 visible={modalVisible}
                 onOk={() => setModalVisible(false)}
                 onCancel={() => setModalVisible(false)}
             >
                 <p>{modalMessage}</p>
-            </Modal>
+            </Modal> */}
         </div>
     );
 }
