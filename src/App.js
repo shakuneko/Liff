@@ -41,7 +41,7 @@ function App() {
                 date: date ? date.format('YYYY/MM/DD') : '',
                 category: category
             };
-            const message = `新增任務\n任務名稱：${data.task}\n日期：${data.date}\n預計執行時間：${data.time}\n類別：${data.category}`;
+            const message = `###${data.task}/${data.date}/${data.time}/${data.category}`;
             // 使用 LIFF 发送数据到 Django 后端
             if (liff.isInClient()) {
                 await liff.sendMessages([
