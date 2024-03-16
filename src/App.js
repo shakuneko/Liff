@@ -2,7 +2,7 @@ import './App.css';
 import { TimePicker, DatePicker, Select, Modal } from 'antd';
 import 'antd/dist/reset.css';
 import React, { useState, useEffect } from 'react';
-
+import liff from '@line/liff'; // 引入 LIFF SDK
 const { Option } = Select;
 
 function App() {
@@ -34,29 +34,25 @@ function App() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('submit button clicked')
-        const data = {
-            task: task,
-            time: time ? time.format('HH:mm:ss') : '',
-            date: date ? date.format('YYYY-MM-DD') : '',
-            category: category
-        };
-
         try {
-            // 使用 LIFF API 取得 LIFF ID
-            const liffId = '2002705912-5lZb9dKB';
-            const liff = window.liff;
+            const data = {
+                task: task,
+                time: time ? time.format('HH:mm:ss') : '',
+                date: date ? date.format('YYYY-MM-DD') : '',
+                category: category
+            };
 
-            // 確保 LIFF 已初始化
-            await liff.init({ liffId });
-
-            // 使用 LIFF API 將資料傳送到 LIFF App
-            await liff.sendMessages([
-                {
-                    'type': 'text',
-                    'text': JSON.stringify(data)
-                }
-            ]);
-
+            // 使用 LIFF 发送数据到 Django 后端
+            if (liff.isInClient()) {
+                await liff.sendMessages([
+                    {
+                        'type': 'text',
+                        'text': JSON.stringify(data)
+                    }
+                ]);
+            } else {
+                console.log('Not in LIFF');
+            }
             setModalMessage('任務清單已完成');
             setModalSuccess(true);
             setModalVisible(true);
@@ -77,8 +73,16 @@ function App() {
 
     useEffect(() => {
         document.title = "任務清單";
+        initializeLiff();
     }, []);
-
+ // 初始化 LIFF
+    const initializeLiff = async () => {
+        try {
+            await liff.init({ liffId: '2002705912-5lZb9dKB' });
+        } catch (error) {
+            console.error('LIFF 初始化失败:', error.message);
+        }
+    };
     return (
         <div className="contain">
             <form onSubmit={handleSubmit}>
