@@ -38,10 +38,10 @@ function App() {
             const data = {
                 task: task,
                 time: time ? time.format('HH:mm') : '',
-                date: date ? date.format('YYYY-MM-DD') : '',
+                date: date ? date.format('YYYY/MM/DD') : '',
                 category: category
             };
-            const message = `###${data.task}/${data.date}/${data.time}/${data.category}`;
+            const message = `新增 ${data.task}/${data.date}/${data.time}/${data.category}`;
             // 使用 LIFF 发送数据到 Django 后端
             if (liff.isInClient()) {
                 await liff.sendMessages([
