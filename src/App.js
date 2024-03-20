@@ -42,30 +42,30 @@ function App() {
                 category: category
             };
             // 向 Django 后端发送 POST 请求
-            const response = await fetch('https://azuredjangodb.azurewebsites.net/api/tasks/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+            // const response = await fetch('https://azuredjangodb.azurewebsites.net/api/tasks/', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(data),
+            // });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            // const message = `新增 ${data.task}/${data.date}/${data.time}/${data.category}`;
-            // 使用 LIFF 发送数据到 Django 后端
-            // if (liff.isInClient()) {
-            //     await liff.sendMessages([
-            //         {
-            //             'type': 'text',
-            //             'text': message
-            //         }
-            //     ]);
-            // } else {
-            //     console.log('Not in LIFF');
+            // if (!response.ok) {
+            //     throw new Error('Network response was not ok');
             // }
+
+            const message = `新增 ${data.task}/${data.date}/${data.time}/${data.category}`;
+            //使用 LIFF 发送数据到 Django 后端
+            if (liff.isInClient()) {
+                await liff.sendMessages([
+                    {
+                        'type': 'text',
+                        'text': message
+                    }
+                ]);
+            } else {
+                console.log('Not in LIFF');
+            }
             // setModalMessage('任務清單已完成');
             // setModalSuccess(true);
             // setModalVisible(true);
