@@ -41,6 +41,19 @@ function App() {
                 date: date ? date.format('YYYY-MM-DD') : '',
                 category: category
             };
+            // 向 Django 后端发送 POST 请求
+            const response = await fetch('https://azuredjangodb.azurewebsites.net/api/tasks/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
             const message = `新增 ${data.task}/${data.date}/${data.time}/${data.category}`;
             // 使用 LIFF 发送数据到 Django 后端
             if (liff.isInClient()) {
