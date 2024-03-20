@@ -54,18 +54,18 @@ function App() {
                 throw new Error('Network response was not ok');
             }
 
-            const message = `新增 ${data.task}/${data.date}/${data.time}/${data.category}`;
+            // const message = `新增 ${data.task}/${data.date}/${data.time}/${data.category}`;
             // 使用 LIFF 发送数据到 Django 后端
-            if (liff.isInClient()) {
-                await liff.sendMessages([
-                    {
-                        'type': 'text',
-                        'text': message
-                    }
-                ]);
-            } else {
-                console.log('Not in LIFF');
-            }
+            // if (liff.isInClient()) {
+            //     await liff.sendMessages([
+            //         {
+            //             'type': 'text',
+            //             'text': message
+            //         }
+            //     ]);
+            // } else {
+            //     console.log('Not in LIFF');
+            // }
             // setModalMessage('任務清單已完成');
             // setModalSuccess(true);
             // setModalVisible(true);
