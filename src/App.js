@@ -120,9 +120,10 @@ function App() {
                     >
                         {[...Array(18)].map((_, index) => {
                         const hour = index + 6; // 从 6 开始，到 23 结束
+                        const hourString = hour < 10 ? `0${hour}` : `${hour}`;
                         return (
                             <Option key={hour} value={hour}>
-                            {`${hour}:00`}
+                            {`${hourString}:00`}
                             </Option>
                         );
                         })}
