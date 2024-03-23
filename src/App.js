@@ -1,5 +1,5 @@
 import './App.css';
-import { TimePicker, DatePicker, Select } from 'antd';
+import { DatePicker, Select } from 'antd';
 import 'antd/dist/reset.css';
 import React, { useState, useEffect } from 'react';
 import liff from '@line/liff'; // 引入 LIFF SDK
@@ -19,8 +19,8 @@ function App() {
     };
 
     const handleTimeChange = (value) => {
-        const selectedTime = value ? value.clone().minute(0) : null;
-        setTime(selectedTime);
+        // const selectedTime = value ? value.clone().minute(0) : null;
+        setTime(value);
     };
 
     const handleDateChange = (date) => {
@@ -37,7 +37,8 @@ function App() {
         try {
             const data = {
                 task: task,
-                time: time ? time.format('HH:mm') : '',
+                // time: time ? time.format('HH:mm') : '',
+                time: time ,
                 date: date ? date.format('YYYY-MM-DD') : '',
                 category: category
             };
@@ -110,7 +111,22 @@ function App() {
                 </div>
                 <div className="form-group">
                     <label>預計執行時間</label>
-                    <TimePicker value={time} className="form-input" onChange={handleTimeChange} format="HH:mm" placeholder="選擇時間"minuteStep={60} />
+                    {/* <TimePicker value={time} className="form-input" onChange={handleTimeChange} format="HH:mm" placeholder="選擇時間"minuteStep={60} /> */}
+                    <Select
+                        value={time}
+                        className="form-select"
+                        onChange={handleTimeChange}
+                        placeholder="預計執行時間"
+                    >
+                        {[...Array(18)].map((_, index) => {
+                        const hour = index + 6; // 从 6 开始，到 23 结束
+                        return (
+                            <Option key={hour} value={hour}>
+                            {`${hour}:00`}
+                            </Option>
+                        );
+                        })}
+                    </Select>
                 </div>
                 <div className="form-group">
                     <label>類別</label>
