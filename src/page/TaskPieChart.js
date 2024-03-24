@@ -1,8 +1,8 @@
 import 'chart.js/auto'; // 导入 chart.js 库
-import React, { useEffect } from 'react';
+import React, {  useState,useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
-import { Segmented } from 'antd';
-
+import { DatePicker, Segmented } from 'antd';
+import 'antd/dist/reset.css';
 const TaskPieChart = ({ completed, notCompleted }) => {
   const data = {
     labels: ['已完成', '未完成'],
@@ -16,6 +16,9 @@ const TaskPieChart = ({ completed, notCompleted }) => {
   };
 
   const options = {
+    layout: {
+      padding:0
+    },
     cutout: '60%', // 设置内环半径，创建圆环
     plugins: {
       legend: {
@@ -59,6 +62,8 @@ const CategoryPieChart = ({ school, work, daily, other }) => {
 
 const RecordPage = () => {
   // const [viewMode, setViewMode] = useState('daily');
+  const [viewMode, setViewMode] = useState('daily');
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     document.title = "詳細資訊";
@@ -76,18 +81,35 @@ const RecordPage = () => {
     daily: 8,
     other: 7,
   };
+  const totalTasks = taskData.completed + taskData.notCompleted;
+  const handlePreviousDay = () => {
+    const prevDate = new Date(currentDate);
+    prevDate.setDate(prevDate.getDate() - 1);
+    setCurrentDate(prevDate);
+  };
 
+  const handleNextDay = () => {
+    const nextDate = new Date(currentDate);
+    nextDate.setDate(nextDate.getDate() + 1);
+    setCurrentDate(nextDate);
+  };
   return (
     <div>
         <Segmented style={{marginTop:"10px"}}options={['日圖表', '月圖表']} block />
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center',marginTop:'16px' }}>
+        <img src="https://imgur.com/kfxWnnH.png" alt="previous" style={{ width: '24px', height: '24px', cursor: 'pointer' }} onClick={handlePreviousDay} />
+          <div>{currentDate.toLocaleDateString()}</div>
+        <img src="https://imgur.com/4VKUp20.png" alt="next" style={{ width: '24px', height: '24px', cursor: 'pointer' }} onClick={handleNextDay} />
+      </div>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{width:"350px"}}>
+      <div style={{ width: "300px", height: "300px" }}>
         <TaskPieChart
           completed={taskData.completed}
           notCompleted={taskData.notCompleted}
         />
       </div>
-      <div style={{width:"350px"}}>
+      
+      <div style={{ width: "300px", height: "300px" }}>
         <CategoryPieChart
           school={categoryData.school}
           work={categoryData.work}
@@ -96,6 +118,9 @@ const RecordPage = () => {
         />
       </div>
     </div>
+      <div style={{ marginTop: "0px", textAlign: "center" }}>
+        <p>目前完成的任務總數：{totalTasks}</p>
+      </div>
     </div>
   );
 };
