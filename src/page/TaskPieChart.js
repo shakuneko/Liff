@@ -80,7 +80,10 @@ const RecordPage = () => {
       .then(data => {
         console.log('Completed data', data);
         const today = new Date();
-        const todayString = today.toISOString().slice(0, 10); // 获取 ISO 8601 格式的日期字符串，如 "2024-03-24"
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const todayString = `${year}-${month}-${day}`; // 获取 ISO 8601 格式的日期字符串，如 "2024-03-25"
 
         // 初始化完成和未完成任务的计数器
         let completedTasks = 0;
@@ -101,7 +104,7 @@ const RecordPage = () => {
         completed: completedTasks,
         notCompleted: notCompletedTasks
       });
-
+      console.log('Completed', completedTasks);
         // 算類別數量
         let schoolCount = 0;
         let workCount = 0;
