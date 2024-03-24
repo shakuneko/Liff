@@ -1,7 +1,7 @@
 import 'chart.js/auto'; // 导入 chart.js 库
 import React, {  useState,useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
-import { DatePicker, Segmented } from 'antd';
+import { Segmented } from 'antd';
 import 'antd/dist/reset.css';
 const TaskPieChart = ({ completed, notCompleted }) => {
   const data = {
@@ -61,26 +61,87 @@ const CategoryPieChart = ({ school, work, daily, other }) => {
 };
 
 const RecordPage = () => {
-  // const [viewMode, setViewMode] = useState('daily');
-  const [viewMode, setViewMode] = useState('daily');
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [taskData, setTaskData] = useState({
+    completed: 0,
+    notCompleted: 0
+  });
+  const [categoryCounts, setCategoryCounts] = useState({
+    school: 0,
+    work: 0,
+    daily: 0,
+    other: 0,
+  });
 
   useEffect(() => {
-    document.title = "詳細資訊";
+
+    fetch('https://azuredjangodb.azurewebsites.net/api/tasks/')
+    .then(response => response.json())
+      .then(data => {
+        console.log('Completed data', data);
+        const today = new Date();
+        const todayString = today.toISOString().slice(0, 10); // 获取 ISO 8601 格式的日期字符串，如 "2024-03-24"
+
+        // 初始化完成和未完成任务的计数器
+        let completedTasks = 0;
+        let notCompletedTasks = 0;
+
+        // 遍历数据并根据日期判断任务是否是今天的任务
+        data.forEach(task => {
+          if (task.date === todayString) {
+            if (task.completed) {
+              completedTasks++;
+            } else {
+              notCompletedTasks++;
+            }
+          }
+      })
+      // 设置任务数据状态
+      setTaskData({
+        completed: completedTasks,
+        notCompleted: notCompletedTasks
+      });
+
+        // 算類別數量
+        let schoolCount = 0;
+        let workCount = 0;
+        let dailyCount = 0;
+        let otherCount = 0;
+    
+        data.forEach(item => {
+          if (item.date === todayString) {
+            switch (item.category) {
+              case '學校':
+                schoolCount++;
+                break;
+              case '工作':
+                workCount++;
+                break;
+              case '日常':
+                dailyCount++;
+                break;
+              case '其他':
+                otherCount++;
+                break;
+              default:
+                break;
+            }
+          }
+        });
+          
+        // 更新狀態
+        setCategoryCounts({
+          school: schoolCount,
+          work: workCount,
+          daily: dailyCount,
+          other: otherCount,
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching category data:', error);
+      });
+    document.title = "統計圖表";
   }, []);
-
-  // 模拟数据
-  const taskData = {
-    completed: 20,
-    notCompleted: 10,
-  };
-
-  const categoryData = {
-    school: 5,
-    work: 10,
-    daily: 8,
-    other: 7,
-  };
   const totalTasks = taskData.completed + taskData.notCompleted;
   const handlePreviousDay = () => {
     const prevDate = new Date(currentDate);
@@ -111,15 +172,15 @@ const RecordPage = () => {
       
       <div style={{ width: "300px", height: "300px" }}>
         <CategoryPieChart
-          school={categoryData.school}
-          work={categoryData.work}
-          daily={categoryData.daily}
-          other={categoryData.other}
+          school={categoryCounts.school}
+          work={categoryCounts.work}
+          daily={categoryCounts.daily}
+          other={categoryCounts.other}
         />
       </div>
     </div>
       <div style={{ marginTop: "0px", textAlign: "center" }}>
-        <p>目前完成的任務總數：{totalTasks}</p>
+        <p>目前的任務總數：{totalTasks}</p>
       </div>
     </div>
   );
