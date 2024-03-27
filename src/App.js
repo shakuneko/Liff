@@ -4,6 +4,7 @@ import { BrowserRouter, Route,Routes} from "react-router-dom";
 import List from './page/List';
 import ItemsPage from './page/ItemsPage';
 import TaskPieChart from './page/TaskPieChart';
+import ItemCard from './page/ItemCard';
 function App() {
     
     return (
@@ -16,6 +17,9 @@ function App() {
             </Routes>
             <Routes>
                 <Route path="/chart" element={<TaskPieChart />} />
+            </Routes>
+            <Routes>
+                <Route path="/card" element={<ItemCard />} />
             </Routes>
         </BrowserRouter>
     );

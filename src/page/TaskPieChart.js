@@ -76,6 +76,7 @@ const RecordPage = () => {
   useEffect(() => {
 
     fetch('https://azuredjangodb.azurewebsites.net/api/tasks/')
+    //fetch('http://127.0.0.1:8000/api/tasks/')
     .then(response => response.json())
       .then(data => {
         console.log('Completed data', data);

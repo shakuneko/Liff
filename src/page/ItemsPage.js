@@ -8,10 +8,19 @@ import React, {  useState ,useEffect } from 'react';
 //   // Add more items as needed
 // ];
 
-const Item = ({ name, image }) => (
-  <div style={{ margin: '10px', textAlign: 'center' }}>
-    <img src={image} alt={name} style={{ width: '100px', height: '100px', marginBottom: '5px' }} />
-    <div>{name}</div>
+const Item = ({ name, image,description }) => (
+  <div style={{ margin: '5px', textAlign: 'center' }}>
+     <div style={{
+      backgroundColor: '#FFD666',
+      borderRadius: '10px',
+      padding: '15px',
+      display: 'inline-block'
+    }}>
+      <img src={image} alt={name} style={{ width: '110px', height: '110px', marginBottom: '10px' }} />
+      <div>{name}</div>
+      <div style={{  marginTop: '5px' ,borderTop: '1px solid #FAAD14' }}>{/* 調整描述文字的大小和上邊距 */}</div>
+      <div style={{ fontSize: '12px', marginTop: '10px'  }}>{description}</div>
+    </div>
   </div>
 );
 
@@ -19,14 +28,16 @@ function ItemsPage() {
   const [itemsData, setItemsData] = useState([]);
   useEffect(() => {
 
-    fetch('https://azuredjangodb.azurewebsites.net/api/items/')
+    // fetch('https://azuredjangodb.azurewebsites.net/api/items/')
+    fetch('http://127.0.0.1:8000/api/items/')
     .then(response => response.json())
       .then(data => {
         console.log('Completed data', data);
         if (Array.isArray(data)) {
           const formattedData = data.map(item => ({
             name: item.item_name,
-            image: item.item_url
+            image: item.item_url,
+            description: item.description
           }));
           setItemsData(formattedData);
         } else {
@@ -53,10 +64,10 @@ function ItemsPage() {
         }
         return groups;
       }, []).map((group, index) => (
-        <div key={index} style={{ display: 'flex', justifyContent: 'center' }}>
+        <div key={index} style={{ display: 'flex', justifyContent:'center'}}>
           {group.map((item, itemIndex) => (
-            <div key={itemIndex} style={{ margin: "20px" }}>
-              {item ? <Item name={item.name} image={item.image} /> : <div style={{ width: '100px', height: '100px' }}></div>}
+            <div key={itemIndex} style={{ margin: "15px"}}>
+              {item ? <Item name={item.name} image={item.image} description={item.description} /> : <div style={{ width: '150px', height: '100px' }}></div>}
             </div>
           ))}
         </div>
