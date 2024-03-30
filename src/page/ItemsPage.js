@@ -9,16 +9,18 @@ import React, {  useState ,useEffect } from 'react';
 // ];
 
 const Item = ({ name, image,description }) => (
-  <div style={{ margin: '5px', textAlign: 'center' }}>
+  <div style={{ margin: '5px', textAlign: 'center',width: '150px' }}>
      <div style={{
       backgroundColor: '#FFD666',
       borderRadius: '10px',
       padding: '15px',
-      display: 'inline-block'
+      display: 'inline-block',
+      width: '100%', // 調整內容寬度為100%
+      height: '100%' // 調整內容高度為100%
     }}>
-      <img src={image} alt={name} style={{ width: '110px', height: '110px', marginBottom: '10px' }} />
+      <img src={image} alt={name} style={{ width: '110px', height: '110px', marginBottom: '15px' }} />
       <div>{name}</div>
-      <div style={{  marginTop: '5px' ,borderTop: '1px solid #FAAD14' }}>{/* 調整描述文字的大小和上邊距 */}</div>
+      <div style={{  marginTop: '10px' ,borderTop: '1px solid #FAAD14' }}>{/* 調整描述文字的大小和上邊距 */}</div>
       <div style={{ fontSize: '12px', marginTop: '10px'  }}>{description}</div>
     </div>
   </div>
@@ -66,7 +68,7 @@ function ItemsPage() {
       }, []).map((group, index) => (
         <div key={index} style={{ display: 'flex', justifyContent:'center'}}>
           {group.map((item, itemIndex) => (
-            <div key={itemIndex} style={{ margin: "15px"}}>
+            <div key={itemIndex} style={{ margin: "10px",marginTop:"15px"}}>
               {item ? <Item name={item.name} image={item.image} description={item.description} /> : <div style={{ width: '150px', height: '100px' }}></div>}
             </div>
           ))}
