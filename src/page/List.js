@@ -1,18 +1,15 @@
 import '../App.css';
-import { DatePicker, Select,Input } from 'antd';
+import { DatePicker, Select } from 'antd';
 import 'antd/dist/reset.css';
 import React, { useState, useEffect } from 'react';
 import liff from '@line/liff'; // 引入 LIFF SDK
-const { Option, OptGroup } = Select; // 导入 OptGroup 组件
+const { Option } = Select;
 
 function List() {
     const [task, setTask] = useState('');
     const [time, setTime] = useState(null);
     const [date, setDate] = useState(null);
     const [category, setCategory] = useState('');
-    const [customCategory, setCustomCategory] = useState(''); // 新添加的自定义类别
-    const [showCustomCategoryInput, setShowCustomCategoryInput] = useState(false); // 控制显示自定义类别输入框
-
     // const [modalVisible, setModalVisible] = useState(false);
     // const [modalMessage, setModalMessage] = useState('');
     // const [modalSuccess, setModalSuccess] = useState(true); // 默认为发送成功
@@ -30,21 +27,8 @@ function List() {
         setDate(date);
     };
 
-    // const handleCategoryChange = (value) => {
-    //     setCategory(value);
-    // };
     const handleCategoryChange = (value) => {
-        if (value === '新增') {
-            setShowCustomCategoryInput(true);
-        } else {
-            setShowCustomCategoryInput(false);
-            setCustomCategory('');
-            setCategory(value);
-        }
-    };
-
-    const handleCustomCategoryChange = (e) => {
-        setCustomCategory(e.target.value);
+        setCategory(value);
     };
 
     const handleSubmit = async (e) => {
@@ -147,23 +131,13 @@ function List() {
                 </div>
                 <div className="form-group">
                     <label>類別</label>
-                    <Select value={category} className="form-select" onChange={handleCategoryChange}>
-                            <Option value="日常">日常</Option>
-                            <Option value="學校">學校</Option>
-                            <Option value="工作">工作</Option>
-                            <Option value="新增">新增</Option>
-                            {showCustomCategoryInput && (
-                                <Option value={customCategory}>{customCategory}</Option>
-                            )}
+                    <Select value={category} className="form-select"  onChange={handleCategoryChange}>
+                        <Option value="" >選擇類別</Option>
+                        <Option value="日常">日常</Option>
+                        <Option value="學校">學校</Option>
+                        <Option value="工作">工作</Option>
+                        <Option value="其他">其他</Option>
                     </Select>
-                    {showCustomCategoryInput && (
-                        <Input
-                            className="form-input"
-                            value={customCategory}
-                            onChange={handleCustomCategoryChange}
-                            placeholder="新增其他類別"
-                        />
-                    )}
                 </div>
                 <div className="form-group">
                     <button type="submit" className="btn-finish">完成</button>
