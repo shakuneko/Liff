@@ -1,5 +1,5 @@
 import '../App.css';
-import { DatePicker, Select,message } from 'antd';
+import { DatePicker, Select,message,Modal } from 'antd';
 import 'antd/dist/reset.css';
 import React, { useState, useEffect } from 'react';
 import liff from '@line/liff'; // 引入 LIFF SDK
@@ -74,13 +74,18 @@ function List() {
             // setModalMessage('任務清單已完成');
             // setModalSuccess(true);
             // setModalVisible(true);
-            window.alert("成功新增任務！");
-            liff.closeWindow();
-            // 在这里处理成功的响应，例如重置表单等
-            setTask('');
-            setTime(null);
-            setDate(null);
-            setCategory('');
+            Modal.success({
+                title: '完成',
+                content: '成功新增任務！',
+                onOk() {
+                    liff.closeWindow();
+                    // 在这里处理成功的响应，例如重置表单等
+                    setTask('');
+                    setTime(null);
+                    setDate(null);
+                    setCategory('');
+                },
+            });
         } catch (error) {
             console.error('Error submitting form:', error);
             window.alert("Error sending message: " + error);
