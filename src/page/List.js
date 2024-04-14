@@ -1,5 +1,5 @@
 import '../App.css';
-import { DatePicker, Select } from 'antd';
+import { DatePicker, Select,message } from 'antd';
 import 'antd/dist/reset.css';
 import React, { useState, useEffect } from 'react';
 import liff from '@line/liff'; // 引入 LIFF SDK
@@ -34,6 +34,10 @@ function List() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('submit button clicked')
+        if (!task || !date || !time || !category) {
+            message.error("請填寫必填項目");
+            return; // 阻止表单提交
+        }
         try {
             const data = {
                 task: task,
@@ -107,7 +111,7 @@ function List() {
                 </div>
                 <div className="form-group">
                     <label>日期</label>
-                    <DatePicker value={date} className="form-input" onChange={handleDateChange} placeholder="選擇日期"/>
+                    <DatePicker value={date} className="form-input" onChange={handleDateChange} placeholder="選擇日期" />
                 </div>
                 <div className="form-group">
                     <label>預計執行時間</label>
@@ -131,7 +135,7 @@ function List() {
                 </div>
                 <div className="form-group">
                     <label>類別</label>
-                    <Select value={category} className="form-select"  onChange={handleCategoryChange}>
+                    <Select value={category} className="form-select"  onChange={handleCategoryChange} >
                         <Option value="" >選擇類別</Option>
                         <Option value="日常">日常</Option>
                         <Option value="學校">學校</Option>
