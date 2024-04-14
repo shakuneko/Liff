@@ -77,6 +77,7 @@ function List() {
             Modal.success({
                 title: '完成',
                 content: '成功新增任務！',
+                width: 300,
                 onOk() {
                     liff.closeWindow();
                     // 在这里处理成功的响应，例如重置表单等
