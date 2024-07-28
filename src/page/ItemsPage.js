@@ -31,8 +31,8 @@ function ItemsPage() {
   const [itemsData, setItemsData] = useState([]);
   useEffect(() => {
 
-    fetch('https://azuredjangodb.azurewebsites.net/api/items/')
-    //fetch('http://127.0.0.1:8000/api/items/')
+    //fetch('https://azuredjangodb.azurewebsites.net/api/items/')
+    fetch('http://127.0.0.1:8000/api/items/')
     .then(response => response.json())
       .then(data => {
         console.log('Completed data', data);
